@@ -8,7 +8,7 @@ MOCK_BYTES = b"Test"
 MOCK_API_KEY = "mock_api_key"
 MOCK_TIMEOUT = 8
 
-MOCK_DETECTION_JSON = {
+DETECTIONS = {
     "image": {"width": 960, "height": 480, "orientation": 1},
     "objects": [
         {
@@ -45,6 +45,19 @@ MOCK_DETECTION_JSON = {
     "requestId": "467f195c4bbf46c69f964b59884dee04",
 }
 
+FACES = [
+    {
+        "boundingBox": {"x": 305, "y": 151, "height": 28, "width": 30},
+        "gender": "male",
+        "age": 33,
+    },
+    {
+        "boundingBox": {"x": 855, "y": 147, "height": 29, "width": 24},
+        "gender": "male",
+        "age": 37,
+    },
+]
 
-def test_parse_response_body():
-    assert hound.parse_response_body(MOCK_DETECTION_JSON) == None
+
+def test_get_faces():
+    assert hound.get_faces(DETECTIONS) == FACES

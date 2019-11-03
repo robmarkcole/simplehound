@@ -13,11 +13,20 @@ DEFAULT_TIMEOUT = 10  # seconds
 URL_DETECTIONS = "https://dev.sighthoundapi.com/v1/detections"
 
 
-def parse_response_body(response: Dict):
+def get_faces(detections: Dict) -> List[Dict]:
     """
-    Get a list of the unique objects predicted.
+    Get the list of the faces.
     """
-    return None
+    faces = []
+    for obj in detections["objects"]:
+        if not obj["type"] == "face":
+            break
+        face = {}
+        face["gender"] = obj["attributes"]["gender"]
+        face["age"] = obj["attributes"]["age"]
+        face["boundingBox"] = obj["boundingBox"]
+        faces.append(face)
+    return faces
 
 
 def post_image(
@@ -31,5 +40,5 @@ class SimplehoundException(Exception):
     pass
 
 
-class SimplehoundDetections():
+class SimplehoundDetections:
     """Work with object detection API."""
