@@ -70,6 +70,10 @@ METADATA = {
 }
 
 
+def test_encode_image():
+    assert hound.encode_image(b"Test") == "VGVzdA=="
+
+
 def test_get_faces():
     assert hound.get_faces(DETECTIONS) == FACES
 
@@ -80,3 +84,7 @@ def test_get_people():
 
 def test_get_metadata():
     assert hound.get_metadata(DETECTIONS) == METADATA
+
+
+def test_run_detection():
+    pass

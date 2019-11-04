@@ -1,3 +1,4 @@
-pytest
 black
+isort
+pytest
 requests_mock
