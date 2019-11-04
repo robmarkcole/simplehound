@@ -20,13 +20,27 @@ def get_faces(detections: Dict) -> List[Dict]:
     faces = []
     for obj in detections["objects"]:
         if not obj["type"] == "face":
-            break
+            continue
         face = {}
         face["gender"] = obj["attributes"]["gender"]
         face["age"] = obj["attributes"]["age"]
         face["boundingBox"] = obj["boundingBox"]
         faces.append(face)
     return faces
+
+
+def get_people(detections: Dict) -> List[Dict]:
+    """
+    Get the list of the people.
+    """
+    people = []
+    for obj in detections["objects"]:
+        if not obj["type"] == "person":
+            continue
+        person = {}
+        person["boundingBox"] = obj["boundingBox"]
+        people.append(person)
+    return people
 
 
 def post_image(

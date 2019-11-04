@@ -58,6 +58,15 @@ FACES = [
     },
 ]
 
+PEOPLE = [
+    {"boundingBox": {"x": 227, "y": 133, "height": 245, "width": 125}},
+    {"boundingBox": {"x": 833, "y": 137, "height": 268, "width": 93}},
+]
+
 
 def test_get_faces():
     assert hound.get_faces(DETECTIONS) == FACES
+
+
+def test_get_people():
+    assert hound.get_people(DETECTIONS) == PEOPLE
