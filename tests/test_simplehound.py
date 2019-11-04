@@ -6,7 +6,8 @@ import pytest
 
 MOCK_BYTES = b"Test"
 MOCK_API_KEY = "mock_api_key"
-MOCK_TIMEOUT = 8
+
+B64_ENCODED_BYTES = "VGVzdA=="
 
 DETECTIONS = {
     "image": {"width": 960, "height": 480, "orientation": 1},
@@ -70,6 +71,10 @@ METADATA = {
 }
 
 
+def test_encode_image():
+    assert hound.encode_image(MOCK_BYTES) == B64_ENCODED_BYTES
+
+
 def test_get_faces():
     assert hound.get_faces(DETECTIONS) == FACES
 
@@ -80,3 +85,10 @@ def test_get_people():
 
 def test_get_metadata():
     assert hound.get_metadata(DETECTIONS) == METADATA
+
+
+def test_good_run_detection():
+    with requests_mock.Mocker() as mock_req:
+        mock_req.post(hound.URL_DETECTIONS, status_code=hound.HTTP_OK, json=DETECTIONS)
+        response = hound.run_detection(B64_ENCODED_BYTES, MOCK_API_KEY)
+        assert response.json() == DETECTIONS
