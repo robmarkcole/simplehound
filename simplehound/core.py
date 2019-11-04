@@ -3,6 +3,7 @@ Simplehound core.
 """
 import base64
 from typing import Dict, List, Set, Union
+import json
 
 import requests
 from PIL import Image
@@ -13,6 +14,11 @@ DEFAULT_TIMEOUT = 10  # seconds
 
 ## API urls
 URL_DETECTIONS = "https://dev.sighthoundapi.com/v1/detections"
+
+DETECTIONS_PARAMS = (
+    ("type", "all"),
+    ("faceOption", "gender,age"),
+)
 
 
 def encode_image(image: bytes) -> str:
@@ -61,9 +67,21 @@ def get_metadata(detections: Dict) -> Dict:
     return metadata
 
 
-def run_detection(image_base64: str, api_key: str):
+def run_detection(image_encoded: str, api_key: str) -> requests.models.Response:
     """Post an image to Sighthound."""
-    return None
+    headers = {"Content-type": "application/json", "X-Access-Token": api_key}
+    try:
+        response = requests.post(
+            URL_DETECTIONS,
+            headers=headers,
+            params=DETECTIONS_PARAMS,
+            data=json.dumps({"image": image_encoded}),
+        )
+        return response
+    except requests.exceptions.Timeout:
+        raise SimplehoundException(f"Timeout connecting to Sighthound")
+    except requests.exceptions.ConnectionError as exc:
+        raise SimplehoundException(f"Connection error: {exc}")
 
 
 class SimplehoundException(Exception):
