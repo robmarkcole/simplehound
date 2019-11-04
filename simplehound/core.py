@@ -43,6 +43,17 @@ def get_people(detections: Dict) -> List[Dict]:
     return people
 
 
+def get_metadata(detections: Dict) -> Dict:
+    """
+    Get the detection metadata.
+    """
+    metadata = {}
+    metadata["image_width"] = detections["image"]["width"]
+    metadata["image_height"] = detections["image"]["height"]
+    metadata["requestId"] = detections["requestId"]
+    return metadata
+
+
 def post_image(
     url: str, image_bytes: bytes, api_key: str, timeout: int, data: dict = {}
 ):

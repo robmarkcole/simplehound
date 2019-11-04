@@ -63,6 +63,12 @@ PEOPLE = [
     {"boundingBox": {"x": 833, "y": 137, "height": 268, "width": 93}},
 ]
 
+METADATA = {
+    "image_width": 960,
+    "image_height": 480,
+    "requestId": "467f195c4bbf46c69f964b59884dee04",
+}
+
 
 def test_get_faces():
     assert hound.get_faces(DETECTIONS) == FACES
@@ -70,3 +76,7 @@ def test_get_faces():
 
 def test_get_people():
     assert hound.get_people(DETECTIONS) == PEOPLE
+
+
+def test_get_metadata():
+    assert hound.get_metadata(DETECTIONS) == METADATA
