@@ -4,10 +4,9 @@ import requests_mock
 import pytest
 
 
-MOCK_BYTES = b"Test"
 MOCK_API_KEY = "mock_api_key"
-
-B64_ENCODED_BYTES = "VGVzdA=="
+MOCK_BYTES = b"Test"
+B64_ENCODED_MOCK_BYTES = "VGVzdA=="
 
 DETECTIONS = {
     "image": {"width": 960, "height": 480, "orientation": 1},
@@ -72,7 +71,7 @@ METADATA = {
 
 
 def test_encode_image():
-    assert hound.encode_image(MOCK_BYTES) == B64_ENCODED_BYTES
+    assert hound.encode_image(MOCK_BYTES) == B64_ENCODED_MOCK_BYTES
 
 
 def test_get_faces():
@@ -90,5 +89,13 @@ def test_get_metadata():
 def test_good_run_detection():
     with requests_mock.Mocker() as mock_req:
         mock_req.post(hound.URL_DETECTIONS, status_code=hound.HTTP_OK, json=DETECTIONS)
-        response = hound.run_detection(B64_ENCODED_BYTES, MOCK_API_KEY)
+        response = hound.run_detection(B64_ENCODED_MOCK_BYTES, MOCK_API_KEY)
         assert response.json() == DETECTIONS
+
+
+def test_cloud_detect():
+    with requests_mock.Mocker() as mock_req:
+        mock_req.post(hound.URL_DETECTIONS, status_code=hound.HTTP_OK, json=DETECTIONS)
+        api = hound.cloud(MOCK_API_KEY)
+        detections = api.detect(MOCK_BYTES)
+        assert detections == DETECTIONS

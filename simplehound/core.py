@@ -3,12 +3,13 @@ Simplehound core.
 """
 import base64
 import json
-from typing import Dict, List, Set, Union
+from typing import Dict, List
 
 import requests
 
 ## Const
 HTTP_OK = 200
+BAD_API_KEY = 401
 
 ## API urls
 URL_DETECTIONS = "https://dev.sighthoundapi.com/v1/detections"
@@ -91,12 +92,8 @@ class cloud:
 
     def detect(self, image: bytes) -> Dict:
         """Run detection on an image (bytes)."""
-        try:
-            response = run_detection(encode_image(image), self._api_key)
-            if not response.status_code == HTTP_OK:
-                raise SimplehoundException(
-                    f"Sightound error - response code: {response.status_code}, reason: {response.reason}"
-                )
+        response = run_detection(encode_image(image), self._api_key)
+        if response.status_code == HTTP_OK:
             return response.json()
-        except Exception as exc:
-            SimplehoundException(str(exc))
+        elif response.status_code == BAD_API_KEY:
+            raise SimplehoundException(f"Bad API key for Sightound")

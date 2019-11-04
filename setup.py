@@ -1,16 +1,16 @@
 from setuptools import setup, find_packages
 
-VERSION = "0.4"
+VERSION = "0.1"
 
 REQUIRES = ["requests"]
 
 setup(
-    name="deepstack-python",
+    name="simplehound",
     version=VERSION,
-    url="https://github.com/robmarkcole/deepstack-python",
+    url="https://github.com/robmarkcole/simplehound",
     author="Robin Cole",
     author_email="robmarkcole@gmail.com",
-    description="Unofficial python API for DeepStack",
+    description="Unofficial python API for Sighthound",
     install_requires=REQUIRES,
     packages=find_packages(),
     license="Apache License, Version 2.0",
