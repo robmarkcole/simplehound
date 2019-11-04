@@ -2,15 +2,13 @@
 Simplehound core.
 """
 import base64
-from typing import Dict, List, Set, Union
 import json
+from typing import Dict, List, Set, Union
 
 import requests
-from PIL import Image
 
 ## Const
 HTTP_OK = 200
-DEFAULT_TIMEOUT = 10  # seconds
 
 ## API urls
 URL_DETECTIONS = "https://dev.sighthoundapi.com/v1/detections"
@@ -70,23 +68,35 @@ def get_metadata(detections: Dict) -> Dict:
 def run_detection(image_encoded: str, api_key: str) -> requests.models.Response:
     """Post an image to Sighthound."""
     headers = {"Content-type": "application/json", "X-Access-Token": api_key}
-    try:
-        response = requests.post(
-            URL_DETECTIONS,
-            headers=headers,
-            params=DETECTIONS_PARAMS,
-            data=json.dumps({"image": image_encoded}),
-        )
-        return response
-    except requests.exceptions.Timeout:
-        raise SimplehoundException(f"Timeout connecting to Sighthound")
-    except requests.exceptions.ConnectionError as exc:
-        raise SimplehoundException(f"Connection error: {exc}")
+    response = requests.post(
+        URL_DETECTIONS,
+        headers=headers,
+        params=DETECTIONS_PARAMS,
+        data=json.dumps({"image": image_encoded}),
+    )
+    return response
 
 
 class SimplehoundException(Exception):
     pass
 
 
-class API:
-    """Work with object detection API."""
+class cloud:
+    """Work with Sighthound cloud."""
+
+    def __init__(
+        self, api_key: str,
+    ):
+        self._api_key = api_key
+
+    def detect(self, image: bytes) -> Dict:
+        """Run detection on an image (bytes)."""
+        try:
+            response = run_detection(encode_image(image), self._api_key)
+            if not response.status_code == HTTP_OK:
+                raise SimplehoundException(
+                    f"Sightound error - response code: {response.status_code}, reason: {response.reason}"
+                )
+            return response.json()
+        except Exception as exc:
+            SimplehoundException(str(exc))
