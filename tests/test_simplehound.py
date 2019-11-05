@@ -7,6 +7,8 @@ import pytest
 MOCK_API_KEY = "mock_api_key"
 MOCK_BYTES = b"Test"
 B64_ENCODED_MOCK_BYTES = "VGVzdA=="
+URL_DETECTIONS_DEV = hound.URL_DETECTIONS_BASE.format("dev")
+URL_DETECTIONS_PROD = hound.URL_DETECTIONS_BASE.format("prod")
 
 DETECTIONS = {
     "image": {"width": 960, "height": 480, "orientation": 1},
@@ -88,14 +90,29 @@ def test_get_metadata():
 
 def test_good_run_detection():
     with requests_mock.Mocker() as mock_req:
-        mock_req.post(hound.URL_DETECTIONS, status_code=hound.HTTP_OK, json=DETECTIONS)
-        response = hound.run_detection(B64_ENCODED_MOCK_BYTES, MOCK_API_KEY)
+        mock_req.post(URL_DETECTIONS_DEV, status_code=hound.HTTP_OK, json=DETECTIONS)
+        response = hound.run_detection(
+            B64_ENCODED_MOCK_BYTES, MOCK_API_KEY, URL_DETECTIONS_DEV
+        )
         assert response.json() == DETECTIONS
+
+
+def test_cloud_mode():
+    """Test that the dev or prod url are being set correctly."""
+    api_dev = hound.cloud(MOCK_API_KEY)
+    assert api_dev._url_detections == URL_DETECTIONS_DEV
+
+    api_prod = hound.cloud(MOCK_API_KEY, mode="prod")
+    assert api_prod._url_detections == URL_DETECTIONS_PROD
+
+    with pytest.raises(hound.SimplehoundException) as exc:
+        hound.cloud(MOCK_API_KEY, mode="bad")
+    assert str(exc.value) == "Mode bad is not allowed, must be dev or prod"
 
 
 def test_cloud_detect():
     with requests_mock.Mocker() as mock_req:
-        mock_req.post(hound.URL_DETECTIONS, status_code=hound.HTTP_OK, json=DETECTIONS)
+        mock_req.post(URL_DETECTIONS_DEV, status_code=hound.HTTP_OK, json=DETECTIONS)
         api = hound.cloud(MOCK_API_KEY)
         detections = api.detect(MOCK_BYTES)
         assert detections == DETECTIONS
