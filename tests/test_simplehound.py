@@ -1,8 +1,8 @@
-import simplehound.core as hound
+import pytest
 import requests
 import requests_mock
-import pytest
 
+import simplehound.core as hound
 
 MOCK_API_KEY = "mock_api_key"
 MOCK_BYTES = b"Test"
@@ -128,4 +128,3 @@ def test_cloud_detect_bad_key():
         api = hound.cloud(MOCK_API_KEY)
         detections = api.detect(MOCK_BYTES)
     assert str(exc.value) == "Bad API key for Sightound"
-
