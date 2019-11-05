@@ -1,4 +1,5 @@
 black
 isort
 pytest
+pytest-cov
 requests_mock

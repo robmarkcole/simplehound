@@ -97,7 +97,7 @@ def test_good_run_detection():
         assert response.json() == DETECTIONS
 
 
-def test_cloud_mode():
+def test_cloud_init():
     """Test that the dev or prod url are being set correctly."""
     api_dev = hound.cloud(MOCK_API_KEY)
     assert api_dev._url_detections == URL_DETECTIONS_DEV
@@ -110,9 +110,22 @@ def test_cloud_mode():
     assert str(exc.value) == "Mode bad is not allowed, must be dev or prod"
 
 
-def test_cloud_detect():
+def test_cloud_detect_good():
     with requests_mock.Mocker() as mock_req:
         mock_req.post(URL_DETECTIONS_DEV, status_code=hound.HTTP_OK, json=DETECTIONS)
         api = hound.cloud(MOCK_API_KEY)
         detections = api.detect(MOCK_BYTES)
         assert detections == DETECTIONS
+
+
+def test_cloud_detect_bad_key():
+    with pytest.raises(
+        hound.SimplehoundException
+    ) as exc, requests_mock.Mocker() as mock_req:
+        mock_req.post(
+            URL_DETECTIONS_DEV, status_code=hound.BAD_API_KEY, json=DETECTIONS
+        )
+        api = hound.cloud(MOCK_API_KEY)
+        detections = api.detect(MOCK_BYTES)
+    assert str(exc.value) == "Bad API key for Sightound"
+
