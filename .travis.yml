@@ -11,6 +11,6 @@ install:
     - pip install -r requirements-dev.txt
 # command to run tests
 script:
-    - py.test
+    - py.test --cov=simplehound tests/
 after_success:
     - coveralls
