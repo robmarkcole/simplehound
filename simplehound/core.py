@@ -12,7 +12,8 @@ HTTP_OK = 200
 BAD_API_KEY = 401
 
 ## API urls
-URL_DETECTIONS = "https://dev.sighthoundapi.com/v1/detections"
+URL_DETECTIONS_BASE = "https://{}.sighthoundapi.com/v1/detections"
+ALLOWED_MODES = ["dev", "prod"]
 
 DETECTIONS_PARAMS = (
     ("type", "all"),
@@ -66,11 +67,13 @@ def get_metadata(detections: Dict) -> Dict:
     return metadata
 
 
-def run_detection(image_encoded: str, api_key: str) -> requests.models.Response:
+def run_detection(
+    image_encoded: str, api_key: str, url_detections: str
+) -> requests.models.Response:
     """Post an image to Sighthound."""
     headers = {"Content-type": "application/json", "X-Access-Token": api_key}
     response = requests.post(
-        URL_DETECTIONS,
+        url_detections,
         headers=headers,
         params=DETECTIONS_PARAMS,
         data=json.dumps({"image": image_encoded}),
@@ -85,14 +88,19 @@ class SimplehoundException(Exception):
 class cloud:
     """Work with Sighthound cloud."""
 
-    def __init__(
-        self, api_key: str,
-    ):
+    def __init__(self, api_key: str, mode: str = "dev"):
+        if not mode in ALLOWED_MODES:
+            raise SimplehoundException(
+                f"Mode {mode} is not allowed, must be dev or prod"
+            )
         self._api_key = api_key
+        self._url_detections = URL_DETECTIONS_BASE.format(mode)
 
     def detect(self, image: bytes) -> Dict:
         """Run detection on an image (bytes)."""
-        response = run_detection(encode_image(image), self._api_key)
+        response = run_detection(
+            encode_image(image), self._api_key, self._url_detections
+        )
         if response.status_code == HTTP_OK:
             return response.json()
         elif response.status_code == BAD_API_KEY:

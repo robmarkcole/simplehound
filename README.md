@@ -9,6 +9,6 @@ Unofficial python API for Sighthound, providing helper functions and classes for
 * Create venv -> `$ python3 -m venv venv`
 * Use venv -> `$ source venv/bin/activate`
 * Install requirements -> `$ pip install -r requirements.txt` & `$ pip install -r requirements-dev.txt`
-* Run tests -> `$ venv/bin/pytest tests/*`
+* Run tests -> `$ venv/bin/pytest --cov=simplehound tests/`
 * Black format -> `$ venv/bin/black simplehound/core.py` and `$ venv/bin/black tests/test_simplehound.py` (or setup VScode for format on save)
 * Sort imports -> `$ venv/bin/isort simplehound/core.py`
