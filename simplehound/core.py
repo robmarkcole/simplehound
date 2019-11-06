@@ -3,7 +3,7 @@ Simplehound core.
 """
 import base64
 import json
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 import requests
 
@@ -19,6 +19,26 @@ DETECTIONS_PARAMS = (
     ("type", "all"),
     ("faceOption", "gender,age"),
 )
+
+
+def bbox_to_tf_style(bbox: Dict, img_width: int, img_height: int) -> Tuple:
+    """
+    Convert Sighthound bounding box to tensorflow box style.
+    
+    In Tensorflow the bounding box is defined by the tuple (y_min, x_min, y_max, x_max)
+    where the coordinates are floats in the range [0.0, 1.0] and
+    relative to the width and height of the image.
+    For example, if an image is 100 x 200 pixels (height x width) and the bounding
+    box is `(0.1, 0.2, 0.5, 0.9)`, the upper-left and bottom-right coordinates of
+    the bounding box will be `(40, 10)` to `(180, 50)` (in (x,y) coordinates).
+    """
+
+    decimals = 5
+    x_min = round(bbox["x"] / img_width, decimals)
+    x_max = round((bbox["x"] + bbox["width"]) / img_width, decimals)
+    y_min = round(bbox["y"] / img_height, decimals)
+    y_max = round((bbox["y"] + bbox["height"]) / img_height, decimals)
+    return (y_min, x_min, y_max, x_max)
 
 
 def encode_image(image: bytes) -> str:

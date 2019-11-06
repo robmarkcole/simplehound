@@ -72,6 +72,18 @@ METADATA = {
 }
 
 
+def test_bbox_to_tf_style():
+    bbox = {"x": 227, "y": 133, "height": 245, "width": 125}
+    img_width = 960
+    img_height = 480
+    assert hound.bbox_to_tf_style(bbox, img_width, img_height) == (
+        0.27708,
+        0.23646,
+        0.7875,
+        0.36667,
+    )
+
+
 def test_encode_image():
     assert hound.encode_image(MOCK_BYTES) == B64_ENCODED_MOCK_BYTES
 
