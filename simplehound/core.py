@@ -149,4 +149,4 @@ class cloud:
         if response.status_code == HTTP_OK:
             return response.json()
         elif response.status_code == BAD_API_KEY:
-            raise SimplehoundException(f"Bad API key for Sightound")
+            raise SimplehoundException(f"Bad API key for Sighthound")
