@@ -12,8 +12,14 @@ HTTP_OK = 200
 BAD_API_KEY = 401
 
 ## API urls
-URL_DETECTIONS_BASE = "https://{}.sighthoundapi.com/v1/detections"
+URL_DETECTIONS_BASE = "https://{}.sighthoundapi.com/v1/{}"
 ALLOWED_MODES = ["dev", "prod"]
+ALLOWED_ENDPOINTS = ["detections","recognition"]
+
+RECOGNITION_PARAMS = (
+    ("objectType", "licenseplate"),
+#    ("faceOption", "gender,age"),
+)
 
 DETECTIONS_PARAMS = (
     ("type", "all"),
@@ -45,6 +51,20 @@ def encode_image(image: bytes) -> str:
     """base64 encode an image."""
     return base64.b64encode(image).decode("ascii")
 
+def get_licensePlates(detections: Dict) -> List[Dict]:
+    """
+    Get the list of the faces.
+    """
+    licensePlates = []
+    for obj in detections["objects"]:
+        if not obj["objectType"] == "licenseplate":
+            continue
+        plate = {}
+        plate["name"] = obj["licenseplateAnnotation"]["attributes"]["system"]["string"]["name"]
+        plate["confidence"] = obj["licenseplateAnnotation"]["attributes"]["system"]["string"]["confidence"]
+#        plate["boundingBox"] = obj["licenseplateAnnotation"]["bounding"]["system"]["vertices"]
+        licensePlates.append(plate)
+    return licensePlates
 
 def get_faces(detections: Dict) -> List[Dict]:
     """
@@ -88,15 +108,15 @@ def get_metadata(detections: Dict) -> Dict:
 
 
 def run_detection(
-    image_encoded: str, api_key: str, url_detections: str
+    image_encoded: str, api_key: str, url_detections: str, url_params
 ) -> requests.models.Response:
     """Post an image to Sighthound."""
     headers = {"Content-type": "application/json", "X-Access-Token": api_key}
     response = requests.post(
         url_detections,
         headers=headers,
-        params=DETECTIONS_PARAMS,
-        data=json.dumps({"image": image_encoded}),
+        params=url_params,
+        data=json.dumps({"image": image_encoded})
     )
     return response
 
@@ -108,20 +128,25 @@ class SimplehoundException(Exception):
 class cloud:
     """Work with Sighthound cloud."""
 
-    def __init__(self, api_key: str, mode: str = "dev"):
+    def __init__(self, api_key: str, mode: str = "dev", endpoint: str = "recognition"):
         if not mode in ALLOWED_MODES:
             raise SimplehoundException(
                 f"Mode {mode} is not allowed, must be dev or prod"
             )
+        if not endpoint in ALLOWED_ENDPOINTS:
+            raise SimplehoundException(
+                f"Endpoint {endpoint} is not allowed, must be recognition or detections"
+            )
         self._api_key = api_key
-        self._url_detections = URL_DETECTIONS_BASE.format(mode)
+        self._url_detections = URL_DETECTIONS_BASE.format(mode,endpoint)
+        self._url_params = DETECTIONS_PARAMS if endpoint == "detections" else RECOGNITION_PARAMS 
 
     def detect(self, image: bytes) -> Dict:
         """Run detection on an image (bytes)."""
         response = run_detection(
-            encode_image(image), self._api_key, self._url_detections
+            encode_image(image), self._api_key, self._url_detections, self._url_params
         )
         if response.status_code == HTTP_OK:
             return response.json()
         elif response.status_code == BAD_API_KEY:
-            raise SimplehoundException(f"Bad API key for Sightound")
+            raise SimplehoundException(f"Bad API key for Sighthound")
