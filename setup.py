@@ -12,7 +12,7 @@ setup(
     author_email="robmarkcole@gmail.com",
     description="Unofficial python API for Sighthound",
     install_requires=REQUIRES,
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests','tests.*']),
     license="Apache License, Version 2.0",
     python_requires=">=3.6",
     classifiers=[
