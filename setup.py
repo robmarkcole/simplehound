@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = "0.3"
+VERSION = "0.4"
 
 REQUIRES = ["requests"]
 
@@ -12,7 +12,7 @@ setup(
     author_email="robmarkcole@gmail.com",
     description="Unofficial python API for Sighthound",
     install_requires=REQUIRES,
-    packages=find_packages(exclude=['tests','tests.*']),
+    packages=find_packages(exclude=["tests", "tests.*"]),
     license="Apache License, Version 2.0",
     python_requires=">=3.6",
     classifiers=[
