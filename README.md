@@ -2,7 +2,7 @@
 [![PyPI Version](https://img.shields.io/pypi/v/simplehound.svg)](https://pypi.org/project/simplehound/)
 
 # simplehound
-Unofficial python API for Sighthound, providing helper functions and classes for processing images and parsing the data returned by Sighthound cloud. See the `usage.ipynb` notebook for usage.
+Unofficial python API for Sighthound, providing helper functions and classes for processing images and parsing the data returned by Sighthound cloud. Face, person and number plate detection are supported. See the `usage.ipynb` notebook for usage.
 
 ## Development
 * Create venv -> `$ python3 -m venv venv`
@@ -11,3 +11,4 @@ Unofficial python API for Sighthound, providing helper functions and classes for
 * Run tests -> `$ venv/bin/py.test --cov=simplehound tests/`
 * Black format -> `$ venv/bin/black simplehound/core.py` and `$ venv/bin/black tests/test_simplehound.py` (or setup VScode for format on save)
 * Sort imports -> `$ venv/bin/isort simplehound/core.py`
+* To run the usage notebook, install `jupyter` in the venv and run `$ jupyter notebook`
