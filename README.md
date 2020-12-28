@@ -2,7 +2,7 @@
 [![PyPI Version](https://img.shields.io/pypi/v/simplehound.svg)](https://pypi.org/project/simplehound/)
 
 # simplehound
-Unofficial python API for Sighthound, providing helper functions and classes for processing images and parsing the data returned by Sighthound cloud. Face, person and licence plate detection are supported. See the `usage.ipynb` notebook for example usage.
+Unofficial python API for Sighthound, providing helper functions and classes for processing images and parsing the data returned by Sighthound cloud. Face, person and license plate detection are supported. See the `usage.ipynb` notebook for example usage.
 
 ## Development
 * Create venv -> `$ python3 -m venv venv`
