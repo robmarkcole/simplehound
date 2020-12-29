@@ -300,4 +300,4 @@ def test_cloud_detect_bad_key():
         )
         api = hound.cloud(MOCK_API_KEY)
         detections = api.detect(MOCK_BYTES)
-    assert str(exc.value) == "Bad API key for Sightound"
+    assert str(exc.value) == "Bad API key for Sighthound"
