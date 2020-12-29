@@ -12,6 +12,7 @@ URL_DETECTIONS_PROD = hound.URL_DETECTIONS_BASE.format("prod")
 URL_RECOGNITIONS_DEV = hound.URL_RECOGNITIONS_BASE.format("dev")
 URL_RECOGNITIONS_PROD = hound.URL_RECOGNITIONS_BASE.format("prod")
 
+## RAW API RESPONSES
 DETECTIONS = {
     "image": {"width": 960, "height": 480, "orientation": 1},
     "objects": [
@@ -46,30 +47,6 @@ DETECTIONS = {
             "boundingBox": {"x": 833, "y": 137, "height": 268, "width": 93},
         },
     ],
-    "requestId": "467f195c4bbf46c69f964b59884dee04",
-}
-
-FACES = [
-    {
-        "boundingBox": {"x": 305, "y": 151, "height": 28, "width": 30},
-        "gender": "male",
-        "age": 33,
-    },
-    {
-        "boundingBox": {"x": 855, "y": 147, "height": 29, "width": 24},
-        "gender": "male",
-        "age": 37,
-    },
-]
-
-PEOPLE = [
-    {"boundingBox": {"x": 227, "y": 133, "height": 245, "width": 125}},
-    {"boundingBox": {"x": 833, "y": 137, "height": 268, "width": 93}},
-]
-
-METADATA = {
-    "image_width": 960,
-    "image_height": 480,
     "requestId": "467f195c4bbf46c69f964b59884dee04",
 }
 
@@ -193,6 +170,46 @@ RECOGNITIONS_LICENSEPLATE = {
     "requestId": "467f195c4bbf46c69f964b59884dee04",
 }
 
+## Processed responses
+FACES = [
+    {
+        "boundingBox": {"x": 305, "y": 151, "height": 28, "width": 30},
+        "gender": "male",
+        "age": 33,
+    },
+    {
+        "boundingBox": {"x": 855, "y": 147, "height": 29, "width": 24},
+        "gender": "male",
+        "age": 37,
+    },
+]
+
+PEOPLE = [
+    {"boundingBox": {"x": 227, "y": 133, "height": 245, "width": 125}},
+    {"boundingBox": {"x": 833, "y": 137, "height": 268, "width": 93}},
+]
+
+METADATA = {
+    "image_width": 960,
+    "image_height": 480,
+    "requestId": "467f195c4bbf46c69f964b59884dee04",
+}
+
+LICENSEPLATE_PROCESSED = [
+    {
+        "boundingBox": {
+            "vertices": [
+                {"x": 494, "y": 294},
+                {"x": 542, "y": 294},
+                {"x": 542, "y": 318},
+                {"x": 494, "y": 318},
+            ]
+        },
+        "string": {"name": "7XJT316", "confidence": 0.116},
+        "region": {"name": "California", "confidence": 0.9918},
+    }
+]
+
 
 def test_bbox_to_tf_style():
     bbox = {"x": 227, "y": 133, "height": 245, "width": 125}
@@ -222,8 +239,8 @@ def test_encode_image():
     assert hound.encode_image(MOCK_BYTES) == B64_ENCODED_MOCK_BYTES
 
 
-def test_get_faces():
-    assert hound.get_faces(DETECTIONS) == FACES
+def test_get_license_plates():
+    assert hound.get_license_plates(RECOGNITIONS_LICENSEPLATE) == LICENSEPLATE_PROCESSED
 
 
 def test_get_people():
@@ -251,7 +268,10 @@ def test_good_run_recognition():
             json=RECOGNITIONS_LICENSEPLATE,
         )
         response = hound.run_recognition(
-            B64_ENCODED_MOCK_BYTES, MOCK_API_KEY, "licenseplate", URL_RECOGNITIONS_DEV
+            B64_ENCODED_MOCK_BYTES,
+            MOCK_API_KEY,
+            URL_RECOGNITIONS_DEV,
+            "licenseplate",
         )
         assert response == RECOGNITIONS_LICENSEPLATE
 

@@ -16,6 +16,8 @@ URL_DETECTIONS_BASE = "https://{}.sighthoundapi.com/v1/detections"
 URL_RECOGNITIONS_BASE = "https://{}.sighthoundapi.com/v1/recognition?objectType="
 ALLOWED_MODES = ["dev", "prod"]
 
+ALLOWED_RECOGNITION_OPTIONS = ["licenseplate", "vehicle", "vehicle,licenseplate"]
+
 DETECTIONS_PARAMS = (
     ("type", "all"),
     ("faceOption", "gender,age"),
@@ -153,7 +155,7 @@ def run_detection(
 
 
 def run_recognition(
-    image_encoded: str, api_key: str, object_type: str, url_recognitions: str
+    image_encoded: str, api_key: str, url_recognitions: str, object_type: str
 ) -> requests.models.Response:
     """Post an image to Sighthound recognition API."""
     return _sighthound_call(image_encoded, api_key, url_recognitions + object_type)
@@ -181,6 +183,8 @@ class cloud:
 
     def recognize(self, image: bytes, object_type: str) -> Dict:
         """Run recognition on an image (bytes)."""
+        if not object_type in ALLOWED_RECOGNITION_OPTIONS:
+            raise SimplehoundException(f"object_type {object_type} is not valid")
         return run_recognition(
-            encode_image(image), self._api_key, object_type, self._url_recognitions
+            encode_image(image), self._api_key, self._url_recognitions, object_type
         )
