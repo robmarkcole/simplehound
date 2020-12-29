@@ -74,7 +74,7 @@ METADATA = {
 }
 
 
-RECOGNITIONS = {
+RECOGNITIONS_LICENSEPLATE = {
     "image": {"width": 960, "height": 480, "orientation": 1},
     "objects": [
         {
@@ -207,7 +207,7 @@ def test_bbox_to_tf_style():
 
 
 def test_bboxvert_to_tf_style():
-    bbox = RECOGNITIONS["objects"][0]["licenseplateAnnotation"]["bounding"]
+    bbox = RECOGNITIONS_LICENSEPLATE["objects"][0]["licenseplateAnnotation"]["bounding"]
     img_width = 960
     img_height = 480
     assert hound.bboxvert_to_tf_style(bbox, img_width, img_height) == (
@@ -240,7 +240,7 @@ def test_good_run_detection():
         response = hound.run_detection(
             B64_ENCODED_MOCK_BYTES, MOCK_API_KEY, URL_DETECTIONS_DEV
         )
-        assert response.json() == DETECTIONS
+        assert response == DETECTIONS
 
 
 def test_good_run_recognition():
@@ -248,12 +248,12 @@ def test_good_run_recognition():
         mock_req.post(
             URL_RECOGNITIONS_DEV + "licenseplate",
             status_code=hound.HTTP_OK,
-            json=RECOGNITIONS,
+            json=RECOGNITIONS_LICENSEPLATE,
         )
         response = hound.run_recognition(
             B64_ENCODED_MOCK_BYTES, MOCK_API_KEY, "licenseplate", URL_RECOGNITIONS_DEV
         )
-        assert response.json() == RECOGNITIONS
+        assert response == RECOGNITIONS_LICENSEPLATE
 
 
 def test_cloud_init():
@@ -279,16 +279,16 @@ def test_cloud_detect_good():
         assert detections == DETECTIONS
 
 
-def test_cloud_recognize_good():
+def test_cloud_recognize_licenseplate_good():
     with requests_mock.Mocker() as mock_req:
         mock_req.post(
             URL_RECOGNITIONS_DEV + "licenseplate",
             status_code=hound.HTTP_OK,
-            json=RECOGNITIONS,
+            json=RECOGNITIONS_LICENSEPLATE,
         )
         api = hound.cloud(MOCK_API_KEY)
         recognitions = api.recognize(MOCK_BYTES, "licenseplate")
-        assert recognitions == RECOGNITIONS
+        assert recognitions == RECOGNITIONS_LICENSEPLATE
 
 
 def test_cloud_detect_bad_key():

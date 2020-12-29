@@ -139,7 +139,10 @@ def _sighthound_call(
         params=params,
         data=json.dumps({"image": image_encoded}),
     )
-    return response
+    if response.status_code == HTTP_OK:
+        return response.json()
+    elif response.status_code == BAD_API_KEY:
+        raise SimplehoundException(f"Bad API key for Sighthound")
 
 
 def run_detection(
@@ -174,20 +177,10 @@ class cloud:
 
     def detect(self, image: bytes) -> Dict:
         """Run detection on an image (bytes)."""
-        response = run_detection(
-            encode_image(image), self._api_key, self._url_detections
-        )
-        if response.status_code == HTTP_OK:
-            return response.json()
-        elif response.status_code == BAD_API_KEY:
-            raise SimplehoundException(f"Bad API key for Sighthound")
+        return run_detection(encode_image(image), self._api_key, self._url_detections)
 
     def recognize(self, image: bytes, object_type: str) -> Dict:
         """Run recognition on an image (bytes)."""
-        response = run_recognition(
+        return run_recognition(
             encode_image(image), self._api_key, object_type, self._url_recognitions
         )
-        if response.status_code == HTTP_OK:
-            return response.json()
-        elif response.status_code == BAD_API_KEY:
-            raise SimplehoundException(f"Bad API key for Sighthound")
