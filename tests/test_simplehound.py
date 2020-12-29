@@ -170,6 +170,175 @@ RECOGNITIONS_LICENSEPLATE = {
     "requestId": "467f195c4bbf46c69f964b59884dee04",
 }
 
+RECOGNITIONS_VEHICLES = {
+    "image": {"width": 1080, "height": 675, "orientation": 1},
+    "requestId": "7b09bdf1547441c78fcd336ac1b78077",
+    "objects": [
+        {
+            "objectId": "_vehicle_c3b12324-1f19-4606-90c6-39c25c8c39fb",
+            "vehicleAnnotation": {
+                "bounding": {
+                    "vertices": [
+                        {"x": 289, "y": 150},
+                        {"x": 1036, "y": 150},
+                        {"x": 1036, "y": 602},
+                        {"x": 289, "y": 602},
+                    ]
+                },
+                "recognitionConfidence": 0.8554,
+                "attributes": {
+                    "system": {
+                        "make": {"name": "Ford", "confidence": 0.8554},
+                        "model": {"name": "Ranger", "confidence": 0.8554},
+                        "color": {"name": "black", "confidence": 0.9988},
+                        "vehicleType": "car",
+                    }
+                },
+            },
+            "objectType": "vehicle",
+        }
+    ],
+}
+
+RECOGNITIONS_ALL = {
+    "image": {"width": 1080, "height": 675, "orientation": 1},
+    "requestId": "a14d1d7e426a429d960fa100d2351cdb",
+    "objects": [
+        {
+            "objectId": "_vehicle_c3b12324-1f19-4606-90c6-39c25c8c39fb",
+            "vehicleAnnotation": {
+                "bounding": {
+                    "vertices": [
+                        {"x": 289, "y": 150},
+                        {"x": 1036, "y": 150},
+                        {"x": 1036, "y": 602},
+                        {"x": 289, "y": 602},
+                    ]
+                },
+                "recognitionConfidence": 0.8554,
+                "licenseplate": {
+                    "bounding": {
+                        "vertices": [
+                            {"x": 755, "y": 377},
+                            {"x": 914, "y": 377},
+                            {"x": 914, "y": 419},
+                            {"x": 755, "y": 419},
+                        ]
+                    },
+                    "attributes": {
+                        "system": {
+                            "string": {"name": "CV67CBU", "confidence": 0.4044},
+                            "characters": [
+                                {
+                                    "bounding": {
+                                        "vertices": [
+                                            {"y": 385, "x": 778},
+                                            {"y": 385, "x": 794},
+                                            {"y": 413, "x": 794},
+                                            {"y": 413, "x": 778},
+                                        ]
+                                    },
+                                    "index": 0,
+                                    "confidence": 0.9797,
+                                    "character": "C",
+                                },
+                                {
+                                    "bounding": {
+                                        "vertices": [
+                                            {"y": 384, "x": 796},
+                                            {"y": 384, "x": 812},
+                                            {"y": 412, "x": 812},
+                                            {"y": 412, "x": 796},
+                                        ]
+                                    },
+                                    "index": 1,
+                                    "confidence": 0.985,
+                                    "character": "V",
+                                },
+                                {
+                                    "bounding": {
+                                        "vertices": [
+                                            {"y": 384, "x": 812},
+                                            {"y": 384, "x": 829},
+                                            {"y": 412, "x": 829},
+                                            {"y": 412, "x": 812},
+                                        ]
+                                    },
+                                    "index": 2,
+                                    "confidence": 0.4732,
+                                    "character": "6",
+                                },
+                                {
+                                    "bounding": {
+                                        "vertices": [
+                                            {"y": 383, "x": 830},
+                                            {"y": 383, "x": 846},
+                                            {"y": 411, "x": 846},
+                                            {"y": 411, "x": 830},
+                                        ]
+                                    },
+                                    "index": 3,
+                                    "confidence": 0.9895,
+                                    "character": "7",
+                                },
+                                {
+                                    "bounding": {
+                                        "vertices": [
+                                            {"y": 383, "x": 853},
+                                            {"y": 383, "x": 869},
+                                            {"y": 411, "x": 869},
+                                            {"y": 411, "x": 853},
+                                        ]
+                                    },
+                                    "index": 4,
+                                    "confidence": 0.998,
+                                    "character": "C",
+                                },
+                                {
+                                    "bounding": {
+                                        "vertices": [
+                                            {"y": 382, "x": 869},
+                                            {"y": 382, "x": 886},
+                                            {"y": 410, "x": 886},
+                                            {"y": 410, "x": 869},
+                                        ]
+                                    },
+                                    "index": 5,
+                                    "confidence": 0.9933,
+                                    "character": "B",
+                                },
+                                {
+                                    "bounding": {
+                                        "vertices": [
+                                            {"y": 381, "x": 887},
+                                            {"y": 381, "x": 903},
+                                            {"y": 410, "x": 903},
+                                            {"y": 410, "x": 887},
+                                        ]
+                                    },
+                                    "index": 6,
+                                    "confidence": 0.9026,
+                                    "character": "U",
+                                },
+                            ],
+                            "region": {"name": "UK", "confidence": 0.9972},
+                        }
+                    },
+                },
+                "attributes": {
+                    "system": {
+                        "make": {"name": "Ford", "confidence": 0.8554},
+                        "model": {"name": "Ranger", "confidence": 0.8554},
+                        "color": {"name": "black", "confidence": 0.9988},
+                        "vehicleType": "car",
+                    }
+                },
+            },
+            "objectType": "vehicle",
+        }
+    ],
+}
+
 ## Processed responses
 FACES = [
     {
@@ -210,6 +379,46 @@ LICENSEPLATE_PROCESSED = [
     }
 ]
 
+VEHICLES_PROCESSED = [
+    {
+        "boundingBox": {
+            "vertices": [
+                {"x": 289, "y": 150},
+                {"x": 1036, "y": 150},
+                {"x": 1036, "y": 602},
+                {"x": 289, "y": 602},
+            ]
+        },
+        "recognitionConfidence": 0.8554,
+        "vehicleType": "car",
+        "make": "Ford",
+        "model": "Ranger",
+        "color": "black",
+        "licenseplate": "unknown",
+        "region": "unknown",
+    }
+]
+
+ALL_PROCESSED = [
+    {
+        "boundingBox": {
+            "vertices": [
+                {"x": 289, "y": 150},
+                {"x": 1036, "y": 150},
+                {"x": 1036, "y": 602},
+                {"x": 289, "y": 602},
+            ]
+        },
+        "recognitionConfidence": 0.8554,
+        "vehicleType": "car",
+        "make": "Ford",
+        "model": "Ranger",
+        "color": "black",
+        "licenseplate": "CV67CBU",
+        "region": "UK",
+    }
+]
+
 
 def test_bbox_to_tf_style():
     bbox = {"x": 227, "y": 133, "height": 245, "width": 125}
@@ -241,6 +450,11 @@ def test_encode_image():
 
 def test_get_license_plates():
     assert hound.get_license_plates(RECOGNITIONS_LICENSEPLATE) == LICENSEPLATE_PROCESSED
+
+
+def test_get_vehicles():
+    assert hound.get_vehicles(RECOGNITIONS_VEHICLES) == VEHICLES_PROCESSED
+    assert hound.get_vehicles(RECOGNITIONS_ALL) == ALL_PROCESSED
 
 
 def test_get_people():

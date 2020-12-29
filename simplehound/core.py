@@ -131,6 +131,38 @@ def get_license_plates(recognitions: Dict) -> List[Dict]:
     return plates
 
 
+def get_vehicles(detections: Dict) -> List[Dict]:
+    """
+    Get the list of the vehicles.
+    """
+    vehicles = []
+    for obj in detections["objects"]:
+        if not obj["objectType"] == "vehicle":
+            continue
+        vehicle = {}
+        vehicle["boundingBox"] = obj["vehicleAnnotation"]["bounding"]
+        vehicle["recognitionConfidence"] = obj["vehicleAnnotation"][
+            "recognitionConfidence"
+        ]
+        attributes = obj["vehicleAnnotation"]["attributes"]["system"]
+        vehicle["vehicleType"] = attributes["vehicleType"]
+        vehicle["make"] = attributes["make"]["name"]
+        vehicle["model"] = attributes["model"]["name"]
+        vehicle["color"] = attributes["color"]["name"]
+        if "licenseplate" in obj["vehicleAnnotation"]:
+            vehicle["licenseplate"] = obj["vehicleAnnotation"]["licenseplate"][
+                "attributes"
+            ]["system"]["string"]["name"]
+            vehicle["region"] = obj["vehicleAnnotation"]["licenseplate"]["attributes"][
+                "system"
+            ]["region"]["name"]
+        else:
+            vehicle["licenseplate"] = "unknown"
+            vehicle["region"] = "unknown"
+        vehicles.append(vehicle)
+    return vehicles
+
+
 def _sighthound_call(image_encoded: str, api_key: str, url: str, params=()) -> Dict:
     headers = {"Content-type": "application/json", "X-Access-Token": api_key}
     response = requests.post(
