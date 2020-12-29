@@ -131,9 +131,7 @@ def get_license_plates(recognitions: Dict) -> List[Dict]:
     return plates
 
 
-def _sighthound_call(
-    image_encoded: str, api_key: str, url: str, params=()
-) -> requests.models.Response:
+def _sighthound_call(image_encoded: str, api_key: str, url: str, params=()) -> Dict:
     headers = {"Content-type": "application/json", "X-Access-Token": api_key}
     response = requests.post(
         url,
@@ -147,16 +145,14 @@ def _sighthound_call(
         raise SimplehoundException(f"Bad API key for Sighthound")
 
 
-def run_detection(
-    image_encoded: str, api_key: str, url_detections: str
-) -> requests.models.Response:
+def run_detection(image_encoded: str, api_key: str, url_detections: str) -> Dict:
     """Post an image to Sighthound detection API."""
     return _sighthound_call(image_encoded, api_key, url_detections, DETECTIONS_PARAMS)
 
 
 def run_recognition(
     image_encoded: str, api_key: str, url_recognitions: str, object_type: str
-) -> requests.models.Response:
+) -> Dict:
     """Post an image to Sighthound recognition API."""
     return _sighthound_call(image_encoded, api_key, url_recognitions + object_type)
 
