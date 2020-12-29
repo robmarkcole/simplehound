@@ -16,6 +16,8 @@ URL_DETECTIONS_BASE = "https://{}.sighthoundapi.com/v1/detections"
 URL_RECOGNITIONS_BASE = "https://{}.sighthoundapi.com/v1/recognition?objectType="
 ALLOWED_MODES = ["dev", "prod"]
 
+ALLOWED_RECOGNITION_OPTIONS = ["licenseplate", "vehicle", "vehicle,licenseplate"]
+
 DETECTIONS_PARAMS = (
     ("type", "all"),
     ("faceOption", "gender,age"),
@@ -129,9 +131,7 @@ def get_license_plates(recognitions: Dict) -> List[Dict]:
     return plates
 
 
-def _sighthound_call(
-    image_encoded: str, api_key: str, url: str, params=()
-) -> requests.models.Response:
+def _sighthound_call(image_encoded: str, api_key: str, url: str, params=()) -> Dict:
     headers = {"Content-type": "application/json", "X-Access-Token": api_key}
     response = requests.post(
         url,
@@ -139,19 +139,20 @@ def _sighthound_call(
         params=params,
         data=json.dumps({"image": image_encoded}),
     )
-    return response
+    if response.status_code == HTTP_OK:
+        return response.json()
+    elif response.status_code == BAD_API_KEY:
+        raise SimplehoundException(f"Bad API key for Sighthound")
 
 
-def run_detection(
-    image_encoded: str, api_key: str, url_detections: str
-) -> requests.models.Response:
+def run_detection(image_encoded: str, api_key: str, url_detections: str) -> Dict:
     """Post an image to Sighthound detection API."""
     return _sighthound_call(image_encoded, api_key, url_detections, DETECTIONS_PARAMS)
 
 
 def run_recognition(
-    image_encoded: str, api_key: str, object_type: str, url_recognitions: str
-) -> requests.models.Response:
+    image_encoded: str, api_key: str, url_recognitions: str, object_type: str
+) -> Dict:
     """Post an image to Sighthound recognition API."""
     return _sighthound_call(image_encoded, api_key, url_recognitions + object_type)
 
@@ -174,20 +175,12 @@ class cloud:
 
     def detect(self, image: bytes) -> Dict:
         """Run detection on an image (bytes)."""
-        response = run_detection(
-            encode_image(image), self._api_key, self._url_detections
-        )
-        if response.status_code == HTTP_OK:
-            return response.json()
-        elif response.status_code == BAD_API_KEY:
-            raise SimplehoundException(f"Bad API key for Sighthound")
+        return run_detection(encode_image(image), self._api_key, self._url_detections)
 
     def recognize(self, image: bytes, object_type: str) -> Dict:
         """Run recognition on an image (bytes)."""
-        response = run_recognition(
-            encode_image(image), self._api_key, object_type, self._url_recognitions
+        if not object_type in ALLOWED_RECOGNITION_OPTIONS:
+            raise SimplehoundException(f"object_type {object_type} is not valid")
+        return run_recognition(
+            encode_image(image), self._api_key, self._url_recognitions, object_type
         )
-        if response.status_code == HTTP_OK:
-            return response.json()
-        elif response.status_code == BAD_API_KEY:
-            raise SimplehoundException(f"Bad API key for Sighthound")
